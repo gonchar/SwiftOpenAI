@@ -10,10 +10,6 @@ import Foundation
 // MARK: OpenAIAPI
 
 enum OpenAIAPI {
-   
-   static var overrideBaseURL: String? = nil
-   static var proxyPath: String? = nil
-   static var overrideVersion: String? = nil
 
    case assistant(AssistantCategory) // https://platform.openai.com/docs/api-reference/assistants
    case audio(AudioCategory) // https://platform.openai.com/docs/api-reference/audio
@@ -138,26 +134,19 @@ enum OpenAIAPI {
 
 // MARK: OpenAIAPI+Endpoint
 
+
 extension OpenAIAPI: Endpoint {
+  func path(version: String, proxyPath: String?) -> String {
+    guard
+      let proxyPath = proxyPath
+    else {
+      return openAIPath(version: version)
+    }
+    return "/\(proxyPath)\(openAIPath(version: version))"
+  }
+  
    
-   var base: String {
-      Self.overrideBaseURL ?? "https://api.openai.com"
-   }
-   
-   var path: String {
-      guard
-         let proxyPath = Self.proxyPath
-      else {
-         return openAIPath
-      }
-      return "/\(proxyPath)\(openAIPath)"
-   }
-   
-   var version: String {
-      Self.overrideVersion ?? "/v1"
-   }
-   
-   var openAIPath: String {
+  func openAIPath(version: String) -> String {
       switch self {
       case .assistant(let category):
          switch category {

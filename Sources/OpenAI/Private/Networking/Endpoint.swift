@@ -18,9 +18,7 @@ enum HTTPMethod: String {
 // MARK: Endpoint
 
 protocol Endpoint {
-   
-   var base: String { get }
-   var path: String { get }
+  func path(version: String, proxyPath: String?) -> String
 }
 
 // MARK: Endpoint+Requests
@@ -28,11 +26,14 @@ protocol Endpoint {
 extension Endpoint {
 
    private func urlComponents(
+      base: String,
+      version:String,
+      proxyPath: String?,
       queryItems: [URLQueryItem])
       -> URLComponents
    {
       var components = URLComponents(string: base)!
-      components.path = path
+     components.path = path(version: version, proxyPath: proxyPath)
       if !queryItems.isEmpty {
          components.queryItems = queryItems
       }
@@ -41,6 +42,9 @@ extension Endpoint {
    
    func request(
       apiKey: Authorization,
+      base: String,
+      version: String,
+      proxyPath: String?,
       organizationID: String?,
       method: HTTPMethod,
       params: Encodable? = nil,
@@ -49,7 +53,7 @@ extension Endpoint {
       extraHeaders: [String: String]? = nil)
       throws -> URLRequest
    {
-      var request = URLRequest(url: urlComponents(queryItems: queryItems).url!)
+     var request = URLRequest(url: urlComponents(base: base, version: version, proxyPath: proxyPath, queryItems: queryItems).url!)
       request.addValue("application/json", forHTTPHeaderField: "Content-Type")
       request.addValue(apiKey.value, forHTTPHeaderField: apiKey.headerField)
       if let organizationID {
@@ -72,13 +76,16 @@ extension Endpoint {
    
    func multiPartRequest(
       apiKey: Authorization,
+      base: String,
+      version: String,
+      proxyPath: String?,
       organizationID: String?,
       method: HTTPMethod,
       params: MultipartFormDataParameters,
       queryItems: [URLQueryItem] = [])
       throws -> URLRequest
    {
-      var request = URLRequest(url: urlComponents(queryItems: queryItems).url!)
+      var request = URLRequest(url: urlComponents(base: base, version: version, proxyPath: proxyPath, queryItems: queryItems).url!)
       request.httpMethod = method.rawValue
       let boundary = UUID().uuidString
       request.addValue(apiKey.value, forHTTPHeaderField: apiKey.headerField)
