@@ -93,8 +93,12 @@ extension AzureOpenAIAPI: Endpoint {
    var base: String {
       "https://\(Self.azureOpenAIResource)/.cognitiveservices.azure.com"
    }
-   
+  
   func path(version: String, proxyPath: String?) -> String {
+    return base + pathAzure(version: version, proxyPath: proxyPath)
+  }
+  
+  func pathAzure(version: String, proxyPath: String?) -> String {
       switch self {
       case .chat(let deploymentID): return "/openai/deployments/\(deploymentID)/chat/completions"
       case .assistant(let category):
