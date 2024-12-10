@@ -90,7 +90,7 @@ enum AzureOpenAIAPI {
 
 extension AzureOpenAIAPI: Endpoint {
   func path(version: String, proxyPath: String?) -> String {
-    return "https://" + "\(Self.azureOpenAIResource).cognitiveservices.azure.com" + pathAzure(version: version, proxyPath: proxyPath)
+    return pathAzure(version: version, proxyPath: proxyPath)
   }
   
   func pathAzure(version: String, proxyPath: String?) -> String {

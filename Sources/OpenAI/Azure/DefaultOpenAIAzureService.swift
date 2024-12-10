@@ -52,7 +52,7 @@ final public class DefaultOpenAIAzureService: OpenAIService {
       chatParameters.stream = false
       let request = try AzureOpenAIAPI.chat(deploymentID: parameters.model).request(
          apiKey: apiKey,
-         base: "",
+         base: "https://\(AzureOpenAIAPI.azureOpenAIResource).cognitiveservices.azure.com",
          version: "",
          proxyPath: nil,
          organizationID: nil,
