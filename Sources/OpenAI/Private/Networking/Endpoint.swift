@@ -53,7 +53,7 @@ extension Endpoint {
       extraHeaders: [String: String]? = nil)
       throws -> URLRequest
    {
-     var request = URLRequest(url: urlComponents(base: base, version: version, proxyPath: proxyPath, queryItems: queryItems).url!)
+      var request = URLRequest(url: URL(string: urlComponents(base: base, version: version, proxyPath: proxyPath, queryItems: queryItems).path)!)
       request.addValue("application/json", forHTTPHeaderField: "Content-Type")
       request.addValue(apiKey.value, forHTTPHeaderField: apiKey.headerField)
       if let organizationID {
@@ -85,7 +85,7 @@ extension Endpoint {
       queryItems: [URLQueryItem] = [])
       throws -> URLRequest
    {
-      var request = URLRequest(url: urlComponents(base: base, version: version, proxyPath: proxyPath, queryItems: queryItems).url!)
+      var request = URLRequest(url: URL(string: urlComponents(base: base, version: version, proxyPath: proxyPath, queryItems: queryItems).path)!)
       request.httpMethod = method.rawValue
       let boundary = UUID().uuidString
       request.addValue(apiKey.value, forHTTPHeaderField: apiKey.headerField)
